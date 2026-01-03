@@ -8,7 +8,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy bot code
 COPY discord_bot.py .
-COPY .env .env
 
 # Run the bot
 CMD ["python", "discord_bot.py"]
