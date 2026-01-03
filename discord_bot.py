@@ -18,8 +18,16 @@ load_dotenv()
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-# Initialize Groq client
-groq_client = Groq(api_key=GROQ_API_KEY)
+# Initialize Groq client with explicit proxy settings to avoid Railway compatibility issues
+try:
+    groq_client = Groq(api_key=GROQ_API_KEY)
+except TypeError as e:
+    if "proxies" in str(e):
+        # Workaround for httpx proxy compatibility issue
+        import httpx
+        groq_client = Groq(api_key=GROQ_API_KEY, http_client=httpx.Client(proxies=None))
+    else:
+        raise
 
 # Bot configuration
 intents = discord.Intents.default()
