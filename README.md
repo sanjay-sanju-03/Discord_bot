@@ -1,4 +1,4 @@
-# � NoelBot_Sanjay - Santa's Christmas Companion
+# NoelBot_Sanjay - Santa's Christmas Companion
 
 A powerful, festive Discord bot that spreads Christmas cheer, promotes peace & positivity, and counts down to New Year with Ho Ho Ho! energy!
 
