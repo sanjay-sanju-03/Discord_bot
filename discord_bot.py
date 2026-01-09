@@ -113,6 +113,7 @@ CAROL_LINES = [
 
 # New Year countdown
 NEW_YEAR_2026 = datetime(2026, 1, 1, 0, 0, 0)
+NEW_YEAR_2027 = datetime(2027, 1, 1, 0, 0, 0)
 
 # Daily positivity messages
 POSITIVITY_MESSAGES = [
@@ -136,10 +137,15 @@ SANTA_GREETINGS = [
     "🎄 Ho Ho Ho! Christmas vibes all around! ❤️",
 ]
 
-def get_new_year_countdown():
-    """Calculate time remaining until New Year 2026."""
+def get_new_year_countdown(year=2026):
+    """Calculate time remaining until New Year."""
     now = datetime.now()
-    time_left = NEW_YEAR_2026 - now
+    if year == 2026:
+        target = NEW_YEAR_2026
+    else:
+        target = NEW_YEAR_2027
+    
+    time_left = target - now
     
     days = time_left.days
     hours, remainder = divmod(time_left.seconds, 3600)
@@ -442,25 +448,51 @@ async def fact(ctx):
 @bot.command(name="newyear")
 async def newyear(ctx):
     """Show New Year countdown - Ho Ho Ho! 🎆"""
-    days, hours, minutes, seconds = get_new_year_countdown()
+    days_2026, hours_2026, minutes_2026, seconds_2026 = get_new_year_countdown(2026)
+    days_2027, hours_2027, minutes_2027, seconds_2027 = get_new_year_countdown(2027)
     
-    if days < 0:
+    if days_2026 < 0:
+        # 2026 has passed, show 2027 countdown
         embed = discord.Embed(
             title="🎉 Happy New Year 2026!",
             description="🎆 The new year has arrived! Santa is celebrating! 🎊✨",
             color=discord.Color.gold()
         )
+        await ctx.send(embed=embed)
+        
+        # Now show 2027 countdown
+        countdown_text = f"""
+🎄 **Ho Ho Ho!** 🎄
+
+Only **{days_2027}** days, **{hours_2027}** hours, **{minutes_2027}** minutes left until New Year 2027! 🎆
+
+⏳ **Time Until New Year 2027** ⏳
+📅 **{days_2027}** days
+⏰ **{hours_2027}** hours
+⏱️ **{minutes_2027}** minutes
+⌛ **{seconds_2027}** seconds
+
+🎅 Let's welcome 2027 with joy and kindness! ❤️
+✨ Every moment brings us closer to another fresh start!
+        """
+        embed2 = discord.Embed(
+            title="🎆 New Year 2027 Countdown 🎆",
+            description=countdown_text,
+            color=discord.Color.brand_red()
+        )
+        embed2.set_footer(text="Santa's counting down with you! 🎅")
+        await ctx.send(embed=embed2)
     else:
         countdown_text = f"""
 🎄 **Ho Ho Ho!** 🎄
 
-Only **{days}** days, **{hours}** hours, **{minutes}** minutes left until New Year! 🎆
+Only **{days_2026}** days, **{hours_2026}** hours, **{minutes_2026}** minutes left until New Year! 🎆
 
 ⏳ **Time Until New Year 2026** ⏳
-📅 **{days}** days
-⏰ **{hours}** hours
-⏱️ **{minutes}** minutes
-⌛ **{seconds}** seconds
+📅 **{days_2026}** days
+⏰ **{hours_2026}** hours
+⏱️ **{minutes_2026}** minutes
+⌛ **{seconds_2026}** seconds
 
 🎅 Let's finish this year with kindness and cheer! ❤️
 ✨ Every moment brings us closer to a fresh start!
@@ -471,8 +503,7 @@ Only **{days}** days, **{hours}** hours, **{minutes}** minutes left until New Ye
             color=discord.Color.brand_red()
         )
         embed.set_footer(text="Santa's counting down with you! 🎅")
-    
-    await ctx.send(embed=embed)
+        await ctx.send(embed=embed)
 
 @bot.command(name="hohoho")
 async def hohoho(ctx):
