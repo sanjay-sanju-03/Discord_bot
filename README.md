@@ -52,6 +52,7 @@ A powerful, festive Discord bot that spreads Christmas cheer, promotes peace & p
 - `/snow` - Snowfall animation ❄️
 - `/carol` - Christmas carol 🎵
 - `/fact` - Christmas fact 📚
+- `/trivia` - Play Christmas Trivia game! 🎄✨
 
 ### 5. **💬 AI Chat Assistant**
 - Powered by Groq's Llama 3.3 70B
@@ -139,6 +140,7 @@ A powerful, festive Discord bot that spreads Christmas cheer, promotes peace & p
 |---------|-------------|
 | `!carol` | 🎵 Share a Christmas carol |
 | `!fact` | 📚 Learn a Christmas fact |
+| `!trivia` | 🎄 Play Christmas Trivia game! |
 | `!ping` | 🏓 Check bot latency |
 | `!clear` | 🗑️ Clear conversation history |
 | `!bothelp` | 📖 Show all commands |
@@ -222,13 +224,14 @@ discord_bot.py
 │   ├── on_ready()
 │   ├── on_message() - Peace detection
 │   └── on_command_error()
-├── Commands (11 total)
+├── Commands (12 total)
 │   ├── !newyear (STAR FEATURE)
 │   ├── !hohoho
 │   ├── !cheer
 │   ├── !peace
 │   ├── !sendgift
 │   ├── !snow
+│   ├── !trivia (NEW GAME!)
 │   ├── !carol
 │   ├── !fact
 │   ├── !ping

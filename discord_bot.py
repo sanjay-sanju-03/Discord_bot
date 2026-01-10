@@ -137,6 +137,58 @@ SANTA_GREETINGS = [
     "🎄 Ho Ho Ho! Christmas vibes all around! ❤️",
 ]
 
+# Christmas Trivia Game Questions
+CHRISTMAS_TRIVIA = [
+    {
+        "question": "🎄 What color is Santa's suit?",
+        "options": ["A) Blue", "B) Red", "C) Green", "D) Yellow"],
+        "answer": "B",
+        "explanation": "Santa Claus traditionally wears a red suit with white trim! 🎅"
+    },
+    {
+        "question": "🎁 How many reindeer pull Santa's sleigh (including Rudolph)?",
+        "options": ["A) 7", "B) 8", "C) 9", "D) 10"],
+        "answer": "C",
+        "explanation": "Nine reindeer: Dasher, Dancer, Prancer, Vixen, Comet, Cupid, Donner, Blitzen, and Rudolph! 🦌"
+    },
+    {
+        "question": "❄️ In which country did the tradition of Christmas trees originate?",
+        "options": ["A) USA", "B) France", "C) Germany", "D) England"],
+        "answer": "C",
+        "explanation": "The Christmas tree tradition began in Germany! 🌲"
+    },
+    {
+        "question": "🎅 What do children leave out for Santa on Christmas Eve?",
+        "options": ["A) Pizza", "B) Cookies and milk", "C) Candy", "D) Fruit"],
+        "answer": "B",
+        "explanation": "Kids traditionally leave cookies and milk for Santa! 🥛🍪"
+    },
+    {
+        "question": "⭐ What is the name of the red-nosed reindeer?",
+        "options": ["A) Rudolph", "B) Dasher", "C) Prancer", "D) Comet"],
+        "answer": "A",
+        "explanation": "Rudolph the Red-Nosed Reindeer guides Santa's sleigh! 🔴"
+    },
+    {
+        "question": "🎄 On which day is Christmas celebrated?",
+        "options": ["A) December 24", "B) December 25", "C) December 26", "D) January 1"],
+        "answer": "B",
+        "explanation": "Christmas is celebrated on December 25th! 🎉"
+    },
+    {
+        "question": "🎁 What do people hang by the fireplace for Santa to fill?",
+        "options": ["A) Socks", "B) Stockings", "C) Bags", "D) Boxes"],
+        "answer": "B",
+        "explanation": "Christmas stockings are hung by the fireplace! 🧦"
+    },
+    {
+        "question": "❄️ What is Frosty the Snowman's nose made of?",
+        "options": ["A) Carrot", "B) Button", "C) Coal", "D) Stick"],
+        "answer": "B",
+        "explanation": "Frosty has a button nose! ⛄"
+    },
+]
+
 def get_new_year_countdown(year=2026):
     """Calculate time remaining until New Year."""
     now = datetime.now()
@@ -377,6 +429,7 @@ async def help_command(ctx):
         name="🎄 Festive Commands",
         value="• `!carol` - 🎵 Christmas carol\n"
               "• `!fact` - 📚 Christmas fact\n"
+              "• `!trivia` - 🎄 Christmas Trivia game\n"
               "• `!ping` - 🏓 Check bot health\n"
               "• `!clear` - 🗑️ Clear your history\n"
               "• `!bothelp` - 📖 Show this message",
@@ -567,6 +620,52 @@ async def snow(ctx):
         color=discord.Color.blue()
     )
     await ctx.send(embed=embed)
+
+@bot.command(name="trivia")
+async def trivia(ctx):
+    """Play Christmas Trivia! Test your holiday knowledge! 🎄"""
+    question_data = random.choice(CHRISTMAS_TRIVIA)
+    
+    # Build question embed
+    options_text = "\n".join(question_data["options"])
+    embed = discord.Embed(
+        title="🎄 Christmas Trivia! 🎄",
+        description=f"{question_data['question']}\n\n{options_text}\n\n**Reply with A, B, C, or D!**",
+        color=discord.Color.green()
+    )
+    embed.set_footer(text="You have 15 seconds to answer! 🎅")
+    await ctx.send(embed=embed)
+    
+    # Wait for user's answer
+    def check(m):
+        return m.author == ctx.author and m.channel == ctx.channel and m.content.upper() in ['A', 'B', 'C', 'D']
+    
+    try:
+        msg = await bot.wait_for('message', check=check, timeout=15.0)
+        user_answer = msg.content.upper()
+        
+        if user_answer == question_data["answer"]:
+            result_embed = discord.Embed(
+                title="🎉 Correct! 🎉",
+                description=f"✨ {question_data['explanation']}\n\n🎅 Ho Ho Ho! You know your Christmas facts!",
+                color=discord.Color.gold()
+            )
+        else:
+            result_embed = discord.Embed(
+                title="❌ Oops! Not quite!",
+                description=f"The correct answer was **{question_data['answer']}**\n\n{question_data['explanation']}\n\n🎄 Try again next time!",
+                color=discord.Color.red()
+            )
+        
+        await ctx.send(embed=result_embed)
+        
+    except:
+        timeout_embed = discord.Embed(
+            title="⏰ Time's Up!",
+            description=f"The correct answer was **{question_data['answer']}**\n\n{question_data['explanation']}\n\n🎅 Try `!trivia` again!",
+            color=discord.Color.orange()
+        )
+        await ctx.send(embed=timeout_embed)
 
 @bot.event
 async def on_command_error(ctx, error):
